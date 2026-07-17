@@ -1,15 +1,15 @@
 {
   "name": "devarchify-server",
   "version": "1.0.0",
+  "type": "commonjs",
   "description": "",
   "main": "index.js",
- "scripts": {
-  "dev": "nodemon --exec tsx src/index.ts"
+  "scripts": {
+  "dev": "tsx watch src/index.ts"
 },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
