@@ -1,16 +1,19 @@
 import { Request, Response } from "express";
-import { Blueprint } from "../models/Blueprint";
+import Blueprint from "../models/Blueprint";
  
 
 export const createBlueprint = async (req: Request, res: Response) => {
   try {
-    const { title, description, userId, technicalDetails } = req.body;
+    
+    const { title, description, userId, architecture, techStack } = req.body;
 
+   
     const newBlueprint = await Blueprint.create({
-      title,
+      projectTitle: title,
       description,
       userId,
-      technicalDetails
+      architecture,     
+      techStack          
     });
 
     res.status(201).json({ success: true, data: newBlueprint });

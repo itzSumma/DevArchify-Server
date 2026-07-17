@@ -1,21 +1,47 @@
-import mongoose, { Document } from "mongoose";
+import mongoose, { Schema, Document, Model } from 'mongoose';
 
+// ১. একটি ইন্টারফেস তৈরি করো (TypeScript-এর জন্য)
 export interface IBlueprint extends Document {
-  title: string;
-  description: string;
   userId: mongoose.Types.ObjectId;
-  technicalDetails?: object;
+  projectTitle: string;
+  description?: string;
+  architecture: {
+    features: string[];
+    databaseSchema: object;
+    apiList: object[];
+    folderStructure: object;
+    roadmap: string[];
+  };
+  techStack: {
+    frontend: string;
+    backend: string;
+    database: string;
+    extras: string[];
+  };
+  createdAt: Date;
 }
 
-const BlueprintSchema = new mongoose.Schema({
-  title: { type: String, required: true },
-  description: { type: String, required: true },
-  technicalDetails: { type: Object },
-  userId: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: 'User', 
-    required: true 
-  }
-}, { timestamps: true });
+// ২. স্কিমা ডিফাইন করো
+const blueprintSchema: Schema = new Schema({
+  userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  projectTitle: { type: String, required: true },
+  description: { type: String },
+  architecture: {
+    features: [String],
+    databaseSchema: Object,
+    apiList: [Object],
+    folderStructure: Object,
+    roadmap: [String]
+  },
+  techStack: {
+    frontend: String,
+    backend: String,
+    database: String,
+    extras: [String]
+  },
+  createdAt: { type: Date, default: Date.now }
+});
 
-export const Blueprint = mongoose.models.Blueprint || mongoose.model<IBlueprint>('Blueprint', BlueprintSchema);
+// ৩. মডেল এক্সপোর্ট করো
+const Blueprint: Model<IBlueprint> = mongoose.model<IBlueprint>('Blueprint', blueprintSchema);
+export default Blueprint;

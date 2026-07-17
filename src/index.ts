@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import connectDB from "./config/db.js";
+import blueprintRoutes from "./routes/blueprintRoutes.js";
 
 dotenv.config();
 
@@ -15,10 +16,11 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Hello, Devarchify Backend is running perfectly!");
 });
 
+app.use("/api/blueprints", blueprintRoutes); // ২. এটি যোগ করুন
+
 const startServer = async () => {
   try {
     await connectDB();
-
     app.listen(PORT, () => {
       console.log(`Server is running on http://localhost:${PORT}`);
     });
