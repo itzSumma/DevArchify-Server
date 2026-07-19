@@ -5,6 +5,7 @@ export interface IBlueprint extends Document {
   userId: mongoose.Types.ObjectId;
   projectTitle: string;
   description?: string;
+  category?: string;
   architecture: {
     features: string[];
     databaseSchema: object;
@@ -26,6 +27,7 @@ const blueprintSchema: Schema = new Schema({
   userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   projectTitle: { type: String, required: true },
   description: { type: String },
+  category: { type: String },
   architecture: {
     features: [String],
     databaseSchema: Object,

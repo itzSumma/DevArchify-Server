@@ -3,6 +3,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import blueprintRoutes from "./routes/blueprintRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
+import aiRoutes from "./routes/aiRoutes.js";
 
 dotenv.config();
 
@@ -16,7 +18,9 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Hello, Devarchify Backend is running perfectly!");
 });
 
-app.use("/api/blueprints", blueprintRoutes); // ২. এটি যোগ করুন
+app.use("/api/blueprints", blueprintRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/ai", aiRoutes);
 
 const startServer = async () => {
   try {
