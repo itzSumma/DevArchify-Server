@@ -67,13 +67,12 @@ export const getBlueprintById = async (req: Request, res: Response) => {
 export const createBlueprint = async (req: Request, res: Response) => {
   try {
     const { title, description, category, techStack, architecture } = req.body;
-    const userId = req.body.userId || (req as any).user?.id;
 
     const newBlueprint = await Blueprint.create({
       projectTitle: title,
       description,
       category,
-      userId,
+      userId: req.user!.id,
       techStack,
       architecture,
     });
@@ -90,6 +89,14 @@ export const deleteBlueprint = async (req: Request, res: Response) => {
 
     if (!blueprint) {
       res.status(404).json({ success: false, message: "Blueprint not found" });
+      return;
+    }
+
+    const isOwner = blueprint.userId.toString() === req.user!.id;
+    const isAdmin = req.user!.role === "admin";
+
+    if (!isOwner && !isAdmin) {
+      res.status(403).json({ success: false, message: "Not authorized to delete this blueprint" });
       return;
     }
 

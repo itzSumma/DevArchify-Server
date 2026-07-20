@@ -10,7 +10,7 @@ export const chatSchema = z.object({
   history: z
     .array(
       z.object({
-        role: z.enum({ user: "user", model: "model" }),
+        role: z.enum(["user", "assistant"]),
         content: z.string().min(1),
       })
     )
