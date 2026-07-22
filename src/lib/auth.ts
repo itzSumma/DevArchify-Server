@@ -17,8 +17,8 @@ if (!process.env.BETTER_AUTH_SECRET) {
 export const auth = betterAuth({
   database: mongodbAdapter(db, { client }),
   secret: process.env.BETTER_AUTH_SECRET,
-  baseURL: process.env.BETTER_AUTH_URL || "http://localhost:5000",
-  trustedOrigins: ["http://localhost:3000"],
+  baseURL: process.env.BETTER_AUTH_URL,
+  trustedOrigins: (process.env.TRUSTED_ORIGINS || "http://localhost:3000,https://devarchify.vercel.app").split(","),
   account: {
     accountLinking: {
       trustedProviders: ["google"],

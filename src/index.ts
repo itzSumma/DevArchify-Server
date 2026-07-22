@@ -12,21 +12,25 @@ import aiRoutes from "./routes/aiRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 
 const app = express();
-const PORT = process.env.PORT || 5000;
 
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+const corsOrigins = process.env.CORS_ORIGIN
+  ? process.env.CORS_ORIGIN.split(",")
+  : process.env.CLIENT_URL
+    ? [process.env.CLIENT_URL]
+    : ["http://localhost:3000", "https://devarchify.vercel.app"];
+app.use(cors({ origin: corsOrigins, credentials: true }));
 
-// Debug: log incoming request headers for CORS/CSRF troubleshooting
-app.use("/api/auth", (req, _res, next) => {
-  console.log(`[DEBUG] ${req.method} ${req.originalUrl}`);
-  console.log(`[DEBUG] Origin: ${req.headers.origin}`);
-  console.log(`[DEBUG] Cookie: ${req.headers.cookie ? "present" : "none"}`);
-  console.log(`[DEBUG] Referer: ${req.headers.referer}`);
-  console.log(`[DEBUG] Content-Type: ${req.headers["content-type"]}`);
-  next();
-});
+if (process.env.NODE_ENV !== "production") {
+  app.use("/api/auth", (req, _res, next) => {
+    console.log(`[DEBUG] ${req.method} ${req.originalUrl}`);
+    console.log(`[DEBUG] Origin: ${req.headers.origin}`);
+    console.log(`[DEBUG] Cookie: ${req.headers.cookie ? "present" : "none"}`);
+    console.log(`[DEBUG] Referer: ${req.headers.referer}`);
+    console.log(`[DEBUG] Content-Type: ${req.headers["content-type"]}`);
+    next();
+  });
+}
 
-// Better Auth handler must be before express.json() so it can read the raw body
 const betterAuthHandler = toNodeHandler(auth);
 const CUSTOM_AUTH_PATHS = ["/register", "/login", "/google", "/better-auth-exchange", "/me"];
 app.use("/api/auth", (req, res, next) => {
@@ -49,16 +53,20 @@ app.use("/api/blueprints", blueprintRoutes);
 app.use("/api/admin", authenticate, authorizeRole("admin"), adminRoutes);
 app.use("/api/ai", aiRoutes);
 
-const startServer = async () => {
-  try {
-    await connectDB();
-    app.listen(PORT, () => {
-      console.log(`Server is running on http://localhost:${PORT}`);
-    });
-  } catch (error) {
-    console.error(`Failed to start server: ${(error as Error).message}`);
-    process.exit(1);
-  }
-};
+const isVercel = process.env.VERCEL === "1";
+if (!isVercel) {
+  const PORT = process.env.PORT || 5000;
+  const startServer = async () => {
+    try {
+      await connectDB();
+      app.listen(PORT, () => {
+        console.log(`Server is running on http://localhost:${PORT}`);
+      });
+    } catch (error) {
+      console.error(`Failed to start server: ${(error as Error).message}`);
+    }
+  };
+  startServer();
+}
 
-startServer();
+export default app;
