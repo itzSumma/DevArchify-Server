@@ -23,6 +23,16 @@ app.use(cors({ origin: corsOrigins, credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
 
+app.use(async (_req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    console.error("[DB CONNECT ERROR]", err);
+    res.status(500).json({ success: false, message: "Database connection failed" });
+  }
+});
+
 const betterAuthHandler = toNodeHandler(auth);
 
 app.use("/api/auth", authRoutes);
@@ -49,17 +59,13 @@ app.use("/api/ai", aiRoutes);
 const isVercel = process.env.VERCEL === "1";
 if (!isVercel) {
   const PORT = process.env.PORT || 5000;
-  const startServer = async () => {
-    try {
-      await connectDB();
-      app.listen(PORT, () => {
-        console.log(`Server is running on http://localhost:${PORT}`);
-      });
-    } catch (error) {
-      console.error(`Failed to start server: ${(error as Error).message}`);
-    }
-  };
-  startServer();
+  app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+  });
+} else {
+  connectDB().catch((err) =>
+    console.error("[DB INIT ERROR]", err)
+  );
 }
 
 export default app;
