@@ -20,6 +20,20 @@ const corsOrigins = process.env.CORS_ORIGIN
     : ["http://localhost:3000", "https://devarchify.vercel.app"];
 app.use(cors({ origin: corsOrigins, credentials: true }));
 
+app.use(express.json());
+app.use(cookieParser());
+
+const betterAuthHandler = toNodeHandler(auth);
+const CUSTOM_AUTH_PATHS = ["/register", "/login", "/google", "/better-auth-exchange", "/me"];
+app.use("/api/auth", (req, res, next) => {
+  if (CUSTOM_AUTH_PATHS.includes(req.path)) {
+    next();
+  } else {
+    betterAuthHandler(req, res, next);
+  }
+});
+app.use("/api/auth", authRoutes);
+
 if (process.env.NODE_ENV !== "production") {
   app.use("/api/auth", (req, _res, next) => {
     console.log(`[DEBUG] ${req.method} ${req.originalUrl}`);
@@ -31,24 +45,9 @@ if (process.env.NODE_ENV !== "production") {
   });
 }
 
-const betterAuthHandler = toNodeHandler(auth);
-const CUSTOM_AUTH_PATHS = ["/register", "/login", "/google", "/better-auth-exchange", "/me"];
-app.use("/api/auth", (req, res, next) => {
-  if (CUSTOM_AUTH_PATHS.includes(req.path)) {
-    next();
-  } else {
-    betterAuthHandler(req, res);
-  }
-});
-
-app.use(express.json());
-app.use(cookieParser());
-
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello, Devarchify Backend is running perfectly!");
 });
-
-app.use("/api/auth", authRoutes);
 app.use("/api/blueprints", blueprintRoutes);
 app.use("/api/admin", authenticate, authorizeRole("admin"), adminRoutes);
 app.use("/api/ai", aiRoutes);
