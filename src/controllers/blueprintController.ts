@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import Blueprint from "../models/Blueprint";
+import Blueprint from "../models/Blueprint.js";
 
 export const getBlueprints = async (req: Request, res: Response) => {
   try {
