@@ -1,4 +1,4 @@
-import OpenAI from "openai";
+import { OpenAI } from "openai";
 
 const OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1";
 const SITE_URL = process.env.SITE_URL || "http://localhost:3000";
