@@ -24,15 +24,9 @@ app.use(express.json());
 app.use(cookieParser());
 
 const betterAuthHandler = toNodeHandler(auth);
-const CUSTOM_AUTH_PATHS = ["/register", "/login", "/google", "/better-auth-exchange", "/me"];
-app.use("/api/auth", (req, res, next) => {
-  if (CUSTOM_AUTH_PATHS.includes(req.path)) {
-    next();
-  } else {
-    betterAuthHandler(req, res, next);
-  }
-});
+
 app.use("/api/auth", authRoutes);
+app.use("/api/auth", betterAuthHandler);
 
 if (process.env.NODE_ENV !== "production") {
   app.use("/api/auth", (req, _res, next) => {
