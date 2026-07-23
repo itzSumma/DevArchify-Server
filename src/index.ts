@@ -10,15 +10,11 @@ import blueprintRoutes from "./routes/blueprintRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import aiRoutes from "./routes/aiRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
+import { resolveCorsOrigins } from "./config/cors.js";
 
 const app = express();
 
-const corsOrigins = process.env.CORS_ORIGIN
-  ? process.env.CORS_ORIGIN.split(",")
-  : process.env.CLIENT_URL
-    ? [process.env.CLIENT_URL]
-    : ["http://localhost:3000", "https://devarchify.vercel.app"];
-app.use(cors({ origin: corsOrigins, credentials: true }));
+app.use(cors({ origin: resolveCorsOrigins(), credentials: true }));
 
 app.use(express.json());
 app.use(cookieParser());
