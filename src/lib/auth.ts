@@ -55,8 +55,9 @@ export const auth = betterAuth({
   emailAndPassword: { enabled: true },
   socialProviders: {
     google: {
-      clientId: process.env.GOOGLE_CLIENT_ID || "",
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+      clientId: (process.env.GOOGLE_CLIENT_ID || "").trim(),
+      clientSecret: (process.env.GOOGLE_CLIENT_SECRET || "").trim(),
+      redirectURI: `${getAuthBaseUrl()}/api/auth/callback/google`,
     },
   },
   databaseHooks: {
