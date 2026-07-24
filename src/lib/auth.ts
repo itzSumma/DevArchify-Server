@@ -12,7 +12,7 @@ export const auth = betterAuth({
   database: mongodbAdapter(db, { client }),
   secret: authSecret,
   baseURL: process.env.BETTER_AUTH_URL,
-  trustedOrigins: (process.env.TRUSTED_ORIGINS || "http://localhost:3000,https://devarchify.vercel.app").split(","),
+  trustedOrigins: (process.env.TRUSTED_ORIGINS || "http://localhost:3000,https://devarchify.vercel.app,https://dev-archify-server.vercel.app").split(","),
   account: {
     accountLinking: {
       trustedProviders: ["google"],
