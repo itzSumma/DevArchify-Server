@@ -21,6 +21,10 @@ function getAuthBaseUrl(): string {
   if (url.includes("devarchify-server.vercel.app")) {
     url = url.replace("devarchify-server.vercel.app", "dev-archify-server.vercel.app");
   }
+  url = url.replace(/\/+$/, "");
+  if (!url.endsWith("/api/auth")) {
+    url = `${url}/api/auth`;
+  }
   return url;
 }
 
@@ -57,7 +61,6 @@ export const auth = betterAuth({
     google: {
       clientId: (process.env.GOOGLE_CLIENT_ID || "").trim(),
       clientSecret: (process.env.GOOGLE_CLIENT_SECRET || "").trim(),
-      redirectURI: `${getAuthBaseUrl()}/api/auth/callback/google`,
     },
   },
   databaseHooks: {
