@@ -28,12 +28,23 @@ export const auth = betterAuth({
   database: mongodbAdapter(db, { client }),
   secret: authSecret,
   baseURL: getAuthBaseUrl(),
-  trustedOrigins: (process.env.TRUSTED_ORIGINS || "http://localhost:3000,https://devarchify.vercel.app,https://dev-archify-server.vercel.app,https://devarchify-server.vercel.app").split(","),
+  trustedOrigins: [
+    "http://localhost:3000",
+    "http://localhost:5000",
+    "https://devarchify.vercel.app",
+    "https://dev-archify-server.vercel.app",
+    "https://devarchify-server.vercel.app",
+    ...(process.env.TRUSTED_ORIGINS ? process.env.TRUSTED_ORIGINS.split(",") : []),
+  ],
   advanced: {
     defaultCookieAttributes: {
       sameSite: "none",
       secure: true,
     },
+  },
+  logger: {
+    disabled: false,
+    level: "debug",
   },
   account: {
     accountLinking: {
