@@ -8,11 +8,27 @@ const db = client.db("DevArchifyDB");
 
 const authSecret = process.env.BETTER_AUTH_SECRET || "devarchify_fallback_secret_key_change_in_production";
 
+function getAuthBaseUrl(): string {
+  let url = process.env.BETTER_AUTH_URL;
+  if (!url && process.env.VERCEL_PROJECT_PRODUCTION_URL) {
+    url = `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
+  } else if (!url && process.env.VERCEL_URL) {
+    url = `https://${process.env.VERCEL_URL}`;
+  }
+  if (!url) {
+    url = "http://localhost:5000";
+  }
+  if (url.includes("devarchify-server.vercel.app")) {
+    url = url.replace("devarchify-server.vercel.app", "dev-archify-server.vercel.app");
+  }
+  return url;
+}
+
 export const auth = betterAuth({
   database: mongodbAdapter(db, { client }),
   secret: authSecret,
-  baseURL: process.env.BETTER_AUTH_URL,
-  trustedOrigins: (process.env.TRUSTED_ORIGINS || "http://localhost:3000,https://devarchify.vercel.app,https://dev-archify-server.vercel.app").split(","),
+  baseURL: getAuthBaseUrl(),
+  trustedOrigins: (process.env.TRUSTED_ORIGINS || "http://localhost:3000,https://devarchify.vercel.app,https://dev-archify-server.vercel.app,https://devarchify-server.vercel.app").split(","),
   account: {
     accountLinking: {
       trustedProviders: ["google"],
