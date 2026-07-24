@@ -29,6 +29,12 @@ export const auth = betterAuth({
   secret: authSecret,
   baseURL: getAuthBaseUrl(),
   trustedOrigins: (process.env.TRUSTED_ORIGINS || "http://localhost:3000,https://devarchify.vercel.app,https://dev-archify-server.vercel.app,https://devarchify-server.vercel.app").split(","),
+  advanced: {
+    defaultCookieAttributes: {
+      sameSite: "none",
+      secure: true,
+    },
+  },
   account: {
     accountLinking: {
       trustedProviders: ["google"],
