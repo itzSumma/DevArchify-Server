@@ -2,21 +2,15 @@ import { betterAuth } from "better-auth";
 import { MongoClient } from "mongodb";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
 
-if (!process.env.MONGODB_URI) {
-  throw new Error(
-    "MONGODB_URI is not set. Check that .env exists in devarchify-server/ and contains MONGODB_URI."
-  );
-}
-const client = new MongoClient(process.env.MONGODB_URI);
+const mongoUri = process.env.MONGODB_URI || "mongodb://localhost:27017/DevArchifyDB";
+const client = new MongoClient(mongoUri);
 const db = client.db("DevArchifyDB");
 
-if (!process.env.BETTER_AUTH_SECRET) {
-  throw new Error("BETTER_AUTH_SECRET is not set in .env");
-}
+const authSecret = process.env.BETTER_AUTH_SECRET || "devarchify_fallback_secret_key_change_in_production";
 
 export const auth = betterAuth({
   database: mongodbAdapter(db, { client }),
-  secret: process.env.BETTER_AUTH_SECRET,
+  secret: authSecret,
   baseURL: process.env.BETTER_AUTH_URL,
   trustedOrigins: (process.env.TRUSTED_ORIGINS || "http://localhost:3000,https://devarchify.vercel.app").split(","),
   account: {

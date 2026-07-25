@@ -1,13 +1,16 @@
 {
   "name": "devarchify-server",
   "version": "1.0.0",
-  "type": "commonjs",
+  "type": "module",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx watch src/index.ts",
-    "start": "node dist/index.js"
-  },
+  "dev": "tsx watch src/index.ts",
+  "build": "tsc",
+  "test": "npm run build && node --test test/*.test.mjs",
+  "start": "node dist/index.js",
+  "vercel-build": "npm run build"
+},
   "engines": {
     "node": ">=20.x"
   },
@@ -33,10 +36,10 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
-    "@types/node": "^26.1.1",
+    "@types/node": "^22.10.0",
     "nodemon": "^3.1.14",
     "ts-node": "^10.9.2",
     "tsx": "^4.23.1",
-    "typescript": "^7.0.2"
+    "typescript": "^5.7.3"
   }
 }
