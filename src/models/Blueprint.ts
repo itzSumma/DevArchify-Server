@@ -6,6 +6,7 @@ export interface IBlueprint extends Document {
   projectTitle: string;
   description?: string;
   category?: string;
+  status: "pending" | "approved" | "rejected";
   architecture: {
     features: string[];
     databaseSchema: object;
@@ -28,6 +29,11 @@ const blueprintSchema: Schema = new Schema({
   projectTitle: { type: String, required: true },
   description: { type: String },
   category: { type: String },
+  status: {
+    type: String,
+    enum: ["pending", "approved", "rejected"],
+    default: "pending",
+  },
   architecture: {
     features: [String],
     databaseSchema: Object,
