@@ -17,7 +17,7 @@ Express.js API server for the DevArchify platform — handles authentication, bl
 ## Core Features
 
 - **AI Blueprint Generation** — Accept a natural-language project idea, construct a detailed prompt, and return a structured architecture blueprint with system design, component hierarchy, data flow, and tech stack.
-- **AI Chat Assistant (SSE)** — Streaming server-sent events chat using OpenRouter's GPT-4o-mini, with per-user conversation history and context-aware responses based on saved blueprints.
+
 - **Blueprint CRUD** — Full create, read (single + list with search/filter/pagination), and delete operations with owner/admin authorization.
 - **User Authentication** — Register, login (email/password), Google OAuth, and JWT-based session management via Better Auth.
 - **Admin Management** — Platform-wide statistics (total users, blueprints, categories), user listing with role filtering, and role updates.
